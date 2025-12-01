@@ -60,11 +60,13 @@ server/
 ### 1️⃣ Install MongoDB
 
 **Download & Install:**
+
 - Visit: https://www.mongodb.com/try/download/community
 - Run installer, choose "Complete"
 - Install as Windows Service
 
 **Start MongoDB:**
+
 ```powershell
 net start MongoDB
 ```
@@ -77,6 +79,7 @@ npm start
 ```
 
 **You should see:**
+
 ```
 ✅ MongoDB Connected Successfully
 🚀 Server started successfully!
@@ -88,6 +91,7 @@ npm start
 **Open browser:** http://localhost:5000
 
 **You should see:**
+
 ```json
 {
   "success": true,
@@ -100,6 +104,7 @@ npm start
 ## 🎯 Features Implemented
 
 ### ✅ Complete Authentication System
+
 - User registration with role selection (user/owner)
 - Secure login with JWT tokens
 - Password hashing with bcrypt
@@ -107,6 +112,7 @@ npm start
 - Role-based authorization
 
 ### ✅ Car Management System
+
 - Add cars with image upload
 - Update/delete cars (owner only)
 - Search and filter cars
@@ -114,6 +120,7 @@ npm start
 - Get owner's car listings
 
 ### ✅ Booking System
+
 - Create bookings with date validation
 - Prevent double-booking (conflict detection)
 - Automatic price calculation
@@ -122,6 +129,7 @@ npm start
 - Cancel bookings
 
 ### ✅ Owner Dashboard
+
 - Total cars count
 - Total bookings statistics
 - Revenue tracking (monthly & total)
@@ -130,6 +138,7 @@ npm start
 - Revenue analytics
 
 ### ✅ Additional Features
+
 - File upload system (car images)
 - Input validation
 - Error handling
@@ -142,11 +151,13 @@ npm start
 ## 📡 API Endpoints
 
 ### Authentication (`/api/auth`)
+
 - `POST /register` - Register user/owner
 - `POST /login` - Login
 - `GET /profile` - Get user profile (protected)
 
 ### Cars (`/api/cars`)
+
 - `GET /` - Get all cars (with filters)
 - `GET /:id` - Get car details
 - `POST /` - Add car (owner only)
@@ -156,6 +167,7 @@ npm start
 - `DELETE /:id` - Delete car (owner)
 
 ### Bookings (`/api/bookings`)
+
 - `POST /` - Create booking (user)
 - `GET /my-bookings` - User's bookings
 - `GET /owner/bookings` - Owner's bookings
@@ -165,6 +177,7 @@ npm start
 - `DELETE /:id` - Delete booking (owner)
 
 ### Dashboard (`/api/dashboard`)
+
 - `GET /stats` - Dashboard statistics (owner)
 - `GET /revenue` - Revenue analytics (owner)
 
@@ -173,12 +186,14 @@ npm start
 ## 🗄️ Database Schema
 
 ### Users Collection
+
 - Name, email, password (hashed)
 - Role (user/owner)
 - Profile image
 - Timestamps
 
 ### Cars Collection
+
 - Owner reference
 - Brand, model, year
 - Image, category, location
@@ -190,6 +205,7 @@ npm start
 - Timestamps
 
 ### Bookings Collection
+
 - Car, user, owner references
 - Pickup & return dates
 - Status (pending/confirmed/cancelled/completed)
@@ -215,33 +231,38 @@ npm start
 
 ## 📚 Documentation Guide
 
-| File | When to Use |
-|------|-------------|
-| **START_HERE.md** | ⭐ First time setup |
-| **MONGODB_SETUP.md** | Installing MongoDB |
-| **SETUP_GUIDE.md** | Step-by-step API testing |
-| **README.md** | API reference documentation |
-| **PROJECT_OVERVIEW.md** | Full project details |
-| **API_COLLECTION.http** | Quick API testing |
+| File                    | When to Use                 |
+| ----------------------- | --------------------------- |
+| **START_HERE.md**       | ⭐ First time setup         |
+| **MONGODB_SETUP.md**    | Installing MongoDB          |
+| **SETUP_GUIDE.md**      | Step-by-step API testing    |
+| **README.md**           | API reference documentation |
+| **PROJECT_OVERVIEW.md** | Full project details        |
+| **API_COLLECTION.http** | Quick API testing           |
 
 ---
 
 ## 🧪 Testing Your Backend
 
 ### Option 1: Use Seed Data
+
 ```powershell
 npm run seed
 ```
+
 Creates test accounts, cars, and bookings.
 
 **Test Login:**
+
 - Email: `owner1@test.com`
 - Password: `password123`
 
 ### Option 2: Manual Testing
+
 Use Thunder Client or Postman with `API_COLLECTION.http`
 
 ### Option 3: MongoDB Compass
+
 - Connect to: `mongodb://localhost:27017`
 - View database: `car-rental-db`
 - Browse collections: users, cars, bookings
@@ -251,20 +272,24 @@ Use Thunder Client or Postman with `API_COLLECTION.http`
 ## 🔒 Security Features
 
 ✅ **Password Security**
+
 - Bcrypt hashing (10 salt rounds)
 - Never stored in plain text
 
 ✅ **Authentication**
+
 - JWT tokens (7-day expiry)
 - Secure token verification
 - Protected routes
 
 ✅ **Authorization**
+
 - Role-based access control
 - Ownership verification
 - Permission checks
 
 ✅ **Input Validation**
+
 - Email validation
 - File type checking (images only)
 - File size limits (5MB)
@@ -276,6 +301,7 @@ Use Thunder Client or Postman with `API_COLLECTION.http`
 ## 🌐 Environment Configuration
 
 Your `.env` file is configured with:
+
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/car-rental-db
@@ -290,6 +316,7 @@ NODE_ENV=development
 ## 📊 What Happens Now?
 
 ### Backend is Running ✅
+
 - Server running on port 5000
 - MongoDB connected
 - All endpoints active
@@ -298,42 +325,46 @@ NODE_ENV=development
 ### Next Steps for Frontend Integration
 
 1. **Update API Base URL** in frontend:
+
    ```javascript
-   const API_URL = 'http://localhost:5000/api';
+   const API_URL = "http://localhost:5000/api";
    ```
 
 2. **Authentication Flow**:
+
    ```javascript
    // Login
-   const response = await fetch('http://localhost:5000/api/auth/login', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify({ email, password })
+   const response = await fetch("http://localhost:5000/api/auth/login", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ email, password }),
    });
    const data = await response.json();
-   localStorage.setItem('token', data.token);
+   localStorage.setItem("token", data.token);
    ```
 
 3. **Protected Requests**:
+
    ```javascript
-   const token = localStorage.getItem('token');
-   const response = await fetch('http://localhost:5000/api/cars', {
-     headers: { 'Authorization': `Bearer ${token}` }
+   const token = localStorage.getItem("token");
+   const response = await fetch("http://localhost:5000/api/cars", {
+     headers: { Authorization: `Bearer ${token}` },
    });
    ```
 
 4. **File Upload** (Add Car):
+
    ```javascript
    const formData = new FormData();
-   formData.append('brand', 'BMW');
-   formData.append('model', 'X5');
-   formData.append('image', imageFile);
+   formData.append("brand", "BMW");
+   formData.append("model", "X5");
+   formData.append("image", imageFile);
    // ... other fields
 
-   const response = await fetch('http://localhost:5000/api/cars', {
-     method: 'POST',
-     headers: { 'Authorization': `Bearer ${token}` },
-     body: formData
+   const response = await fetch("http://localhost:5000/api/cars", {
+     method: "POST",
+     headers: { Authorization: `Bearer ${token}` },
+     body: formData,
    });
    ```
 
@@ -342,21 +373,25 @@ NODE_ENV=development
 ## 🎓 Key Concepts to Know
 
 ### JWT Authentication
+
 - Login returns a token
 - Store token in localStorage
 - Send token in Authorization header
 - Format: `Bearer <token>`
 
 ### Role-Based Access
+
 - **Users**: Can book cars, view their bookings
 - **Owners**: Can add/manage cars, view bookings for their cars
 
 ### Image Upload
+
 - Use `multipart/form-data` for car creation
 - Images saved in `/uploads` folder
 - Accessible at `http://localhost:5000/uploads/filename.jpg`
 
 ### Booking Flow
+
 1. User selects car and dates
 2. Backend validates dates
 3. Checks for conflicts
@@ -369,22 +404,26 @@ NODE_ENV=development
 ## ⚠️ Common Issues & Solutions
 
 ### Issue: MongoDB Connection Error
+
 ```powershell
 # Solution: Start MongoDB
 net start MongoDB
 ```
 
 ### Issue: Port 5000 Already in Use
+
 ```
 Solution: Change PORT in .env to 5001 or 5002
 ```
 
 ### Issue: Token Invalid/Expired
+
 ```
 Solution: Login again to get new token
 ```
 
 ### Issue: File Upload Fails
+
 ```
 Solution: Check file is an image and under 5MB
 ```
@@ -412,7 +451,7 @@ Solution: Check file is an image and under 5MB
 ✅ Sample data seeder included  
 ✅ Comprehensive documentation provided  
 ✅ Error handling implemented  
-✅ Security features enabled  
+✅ Security features enabled
 
 ---
 
@@ -421,6 +460,7 @@ Solution: Check file is an image and under 5MB
 Your **complete, production-ready backend** is now ready for use!
 
 **Current Status:**
+
 - ✅ Server running on http://localhost:5000
 - ✅ MongoDB connected
 - ✅ All features implemented

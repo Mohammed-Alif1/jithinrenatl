@@ -7,11 +7,13 @@
 #### Option A: Using MongoDB Community Server (Recommended)
 
 1. **Download MongoDB:**
+
    - Visit: https://www.mongodb.com/try/download/community
    - Select Windows, Latest Version
    - Download the MSI installer
 
 2. **Install MongoDB:**
+
    - Run the installer
    - Choose "Complete" installation
    - Check "Install MongoDB as a Service"
@@ -19,10 +21,11 @@
    - Complete installation
 
 3. **Verify MongoDB is Running:**
+
    ```powershell
    # Check if MongoDB service is running
    Get-Service MongoDB
-   
+
    # If not running, start it
    net start MongoDB
    ```
@@ -47,6 +50,7 @@ npm start
 ```
 
 You should see:
+
 ```
 ✅ MongoDB Connected Successfully
 🚀 Server started successfully!
@@ -58,6 +62,7 @@ You should see:
 Open browser and visit: http://localhost:5000
 
 You should see:
+
 ```json
 {
   "success": true,
@@ -73,6 +78,7 @@ You should see:
 **Method:** POST  
 **URL:** http://localhost:5000/api/auth/register  
 **Body (JSON):**
+
 ```json
 {
   "name": "Car Owner",
@@ -83,6 +89,7 @@ You should see:
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -104,6 +111,7 @@ You should see:
 **Method:** POST  
 **URL:** http://localhost:5000/api/auth/register  
 **Body (JSON):**
+
 ```json
 {
   "name": "John Doe",
@@ -118,10 +126,13 @@ You should see:
 **Method:** POST  
 **URL:** http://localhost:5000/api/cars  
 **Headers:**
+
 ```
 Authorization: Bearer <paste_your_token_here>
 ```
+
 **Body (form-data):**
+
 - brand: `Toyota`
 - model: `Camry`
 - year: `2023`
@@ -145,10 +156,13 @@ Authorization: Bearer <paste_your_token_here>
 **Method:** POST  
 **URL:** http://localhost:5000/api/bookings  
 **Headers:**
+
 ```
 Authorization: Bearer <user_token>
 ```
+
 **Body (JSON):**
+
 ```json
 {
   "carId": "<paste_car_id_from_step_4.4>",
@@ -162,6 +176,7 @@ Authorization: Bearer <user_token>
 **Method:** GET  
 **URL:** http://localhost:5000/api/dashboard/stats  
 **Headers:**
+
 ```
 Authorization: Bearer <owner_token>
 ```
@@ -169,14 +184,17 @@ Authorization: Bearer <owner_token>
 ## 🛠️ Tools for Testing APIs
 
 ### Option 1: VS Code Thunder Client Extension
+
 1. Install "Thunder Client" extension in VS Code
 2. Create new requests using the examples above
 
 ### Option 2: Postman
+
 1. Download from: https://www.postman.com/downloads/
 2. Import requests using the examples above
 
 ### Option 3: Browser (for GET requests only)
+
 - Visit URLs directly in browser
 - For POST/PUT/DELETE, use Thunder Client or Postman
 
@@ -195,9 +213,11 @@ Authorization: Bearer <owner_token>
 ## ❌ Common Issues & Solutions
 
 ### Issue 1: MongoDB Not Connected
+
 **Error:** `❌ MongoDB Connection Error`
 
 **Solution:**
+
 ```powershell
 # Start MongoDB service
 net start MongoDB
@@ -207,9 +227,11 @@ Get-Service MongoDB
 ```
 
 ### Issue 2: Port Already in Use
+
 **Error:** `EADDRINUSE: address already in use :::5000`
 
 **Solution:**
+
 ```powershell
 # Find process using port 5000
 netstat -ano | findstr :5000
@@ -222,17 +244,21 @@ PORT=5001
 ```
 
 ### Issue 3: Token Invalid
+
 **Error:** `Invalid or expired token`
 
 **Solution:**
+
 - Make sure you're including the token in headers
 - Format: `Authorization: Bearer <token>`
 - Token expires after 7 days - login again to get new token
 
 ### Issue 4: File Upload Fails
+
 **Error:** File upload errors
 
 **Solution:**
+
 - Make sure `uploads` folder exists
 - Check file is an image (jpg, png, webp)
 - File size should be under 5MB
@@ -240,16 +266,19 @@ PORT=5001
 ## 📊 Database Schema Overview
 
 ### Users
+
 - Stores user accounts (both customers and car owners)
 - Passwords are hashed for security
 - Role-based access control
 
 ### Cars
+
 - Each car belongs to an owner (user with role='owner')
 - Contains all car details and pricing
 - Images stored in `/uploads` folder
 
 ### Bookings
+
 - Links users to cars they want to rent
 - Tracks dates, prices, and status
 - Prevents double-booking on same dates
@@ -257,29 +286,37 @@ PORT=5001
 ## 🎓 API Usage Examples
 
 ### Search Cars by Location
+
 GET `http://localhost:5000/api/cars?location=New York`
 
 ### Search Cars by Category
+
 GET `http://localhost:5000/api/cars?category=SUV`
 
 ### Search Cars by Price Range
+
 GET `http://localhost:5000/api/cars?minPrice=50&maxPrice=150`
 
 ### Search Cars by Keyword
+
 GET `http://localhost:5000/api/cars?search=Toyota`
 
 ### Get User's Bookings
+
 GET `http://localhost:5000/api/bookings/my-bookings`  
 Headers: `Authorization: Bearer <user_token>`
 
 ### Get Owner's Bookings
+
 GET `http://localhost:5000/api/bookings/owner/bookings`  
 Headers: `Authorization: Bearer <owner_token>`
 
 ### Update Booking Status (Owner)
+
 PATCH `http://localhost:5000/api/bookings/<booking_id>/status`  
 Headers: `Authorization: Bearer <owner_token>`  
 Body:
+
 ```json
 {
   "status": "confirmed"
@@ -287,17 +324,20 @@ Body:
 ```
 
 ### Cancel Booking (User)
+
 PATCH `http://localhost:5000/api/bookings/<booking_id>/cancel`  
 Headers: `Authorization: Bearer <user_token>`
 
 ## 🚀 Next Steps
 
 1. **Connect Frontend:**
+
    - Update frontend API calls to point to `http://localhost:5000`
    - Use the token from login for authenticated requests
    - Handle image uploads in car creation forms
 
 2. **Test All Features:**
+
    - Register users with different roles
    - Add multiple cars
    - Create bookings

@@ -95,6 +95,7 @@ If you don't want to install the full MongoDB server, you can use MongoDB Atlas 
 **Error**: "The MongoDB service is not starting"
 
 **Solution**:
+
 ```powershell
 # Stop the service if running
 net stop MongoDB
@@ -109,6 +110,7 @@ net start MongoDB
 ### Issue 2: Port 27017 Already in Use
 
 **Solution**:
+
 ```powershell
 # Find what's using port 27017
 netstat -ano | findstr :27017
@@ -123,6 +125,7 @@ net start MongoDB
 ### Issue 3: Can't Connect to MongoDB
 
 **Check if MongoDB is running**:
+
 ```powershell
 # List all MongoDB processes
 Get-Process | Where-Object {$_.ProcessName -like "*mongo*"}
@@ -132,6 +135,7 @@ Get-Service MongoDB
 ```
 
 **Start MongoDB manually** (if service doesn't work):
+
 ```powershell
 # Navigate to MongoDB bin folder
 cd "C:\Program Files\MongoDB\Server\8.0\bin"
@@ -176,23 +180,27 @@ Replace `<username>` and `<password>` with your Atlas credentials.
 After MongoDB is running:
 
 1. **Start your backend server**:
+
    ```powershell
    cd "c:\Users\DELL\Desktop\New folder\jithinrenatl\server"
    npm start
    ```
 
 2. **Look for this message**:
+
    ```
    ✅ MongoDB Connected Successfully
    🚀 Server started successfully!
    ```
 
 3. **If you see connection error**:
+
    ```
    ❌ MongoDB Connection Error
    ```
-   
+
    Make sure:
+
    - MongoDB service is running (`Get-Service MongoDB`)
    - Connection string in `.env` is correct
    - No firewall blocking port 27017
@@ -253,6 +261,7 @@ mongosh --eval "show dbs"
 ### Enable Authentication:
 
 1. Create admin user:
+
    ```javascript
    use admin
    db.createUser({
@@ -279,11 +288,13 @@ npm run seed
 ```
 
 This creates:
+
 - 4 Test users (2 owners, 2 regular users)
 - 6 Sample cars
 - 3 Sample bookings
 
 **Test Accounts**:
+
 - Owner: `owner1@test.com` / `password123`
 - User: `user1@test.com` / `password123`
 
@@ -294,6 +305,7 @@ This creates:
 MongoDB is now ready for your car rental platform backend! 🎉
 
 **Next Steps**:
+
 1. ✅ MongoDB installed and running
 2. ✅ Backend server connected to MongoDB
 3. ✅ Database seeded with sample data

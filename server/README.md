@@ -27,11 +27,13 @@ Before running this project, make sure you have:
 If you don't have MongoDB installed:
 
 **Windows:**
+
 1. Download MongoDB Community Server from [mongodb.com](https://www.mongodb.com/try/download/community)
 2. Run the installer and follow the setup wizard
 3. MongoDB will typically install at `C:\Program Files\MongoDB\Server\[version]\bin`
 
 **Start MongoDB:**
+
 ```powershell
 # Start MongoDB service
 net start MongoDB
@@ -69,11 +71,13 @@ NODE_ENV=development
 ## 🏃 Running the Server
 
 ### Development Mode (with auto-restart):
+
 ```bash
 npm run dev
 ```
 
 ### Production Mode:
+
 ```bash
 npm start
 ```
@@ -84,13 +88,14 @@ The server will start on `http://localhost:5000`
 
 ### Authentication (`/api/auth`)
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/auth/register` | Register new user | No |
-| POST | `/api/auth/login` | Login user | No |
-| GET | `/api/auth/profile` | Get user profile | Yes |
+| Method | Endpoint             | Description       | Auth Required |
+| ------ | -------------------- | ----------------- | ------------- |
+| POST   | `/api/auth/register` | Register new user | No            |
+| POST   | `/api/auth/login`    | Login user        | No            |
+| GET    | `/api/auth/profile`  | Get user profile  | Yes           |
 
 **Register/Login Body:**
+
 ```json
 {
   "name": "John Doe",
@@ -102,17 +107,18 @@ The server will start on `http://localhost:5000`
 
 ### Cars (`/api/cars`)
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| GET | `/api/cars` | Get all available cars | No | - |
-| GET | `/api/cars/:id` | Get car by ID | No | - |
-| POST | `/api/cars` | Add new car | Yes | Owner |
-| GET | `/api/cars/owner/my-cars` | Get owner's cars | Yes | Owner |
-| PUT | `/api/cars/:id` | Update car | Yes | Owner |
-| PATCH | `/api/cars/:id/toggle` | Toggle availability | Yes | Owner |
-| DELETE | `/api/cars/:id` | Delete car | Yes | Owner |
+| Method | Endpoint                  | Description            | Auth Required | Role  |
+| ------ | ------------------------- | ---------------------- | ------------- | ----- |
+| GET    | `/api/cars`               | Get all available cars | No            | -     |
+| GET    | `/api/cars/:id`           | Get car by ID          | No            | -     |
+| POST   | `/api/cars`               | Add new car            | Yes           | Owner |
+| GET    | `/api/cars/owner/my-cars` | Get owner's cars       | Yes           | Owner |
+| PUT    | `/api/cars/:id`           | Update car             | Yes           | Owner |
+| PATCH  | `/api/cars/:id/toggle`    | Toggle availability    | Yes           | Owner |
+| DELETE | `/api/cars/:id`           | Delete car             | Yes           | Owner |
 
 **Add Car (multipart/form-data):**
+
 ```
 brand: BMW
 model: X5
@@ -128,6 +134,7 @@ image: [file]
 ```
 
 **Query Parameters for GET /api/cars:**
+
 - `category` - Filter by category
 - `location` - Filter by location
 - `search` - Search in brand/model/description
@@ -136,17 +143,18 @@ image: [file]
 
 ### Bookings (`/api/bookings`)
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| POST | `/api/bookings` | Create booking | Yes | User |
-| GET | `/api/bookings/my-bookings` | Get user bookings | Yes | User |
-| GET | `/api/bookings/owner/bookings` | Get owner bookings | Yes | Owner |
-| GET | `/api/bookings/:id` | Get booking by ID | Yes | User/Owner |
-| PATCH | `/api/bookings/:id/status` | Update booking status | Yes | Owner |
-| PATCH | `/api/bookings/:id/cancel` | Cancel booking | Yes | User |
-| DELETE | `/api/bookings/:id` | Delete booking | Yes | Owner |
+| Method | Endpoint                       | Description           | Auth Required | Role       |
+| ------ | ------------------------------ | --------------------- | ------------- | ---------- |
+| POST   | `/api/bookings`                | Create booking        | Yes           | User       |
+| GET    | `/api/bookings/my-bookings`    | Get user bookings     | Yes           | User       |
+| GET    | `/api/bookings/owner/bookings` | Get owner bookings    | Yes           | Owner      |
+| GET    | `/api/bookings/:id`            | Get booking by ID     | Yes           | User/Owner |
+| PATCH  | `/api/bookings/:id/status`     | Update booking status | Yes           | Owner      |
+| PATCH  | `/api/bookings/:id/cancel`     | Cancel booking        | Yes           | User       |
+| DELETE | `/api/bookings/:id`            | Delete booking        | Yes           | Owner      |
 
 **Create Booking Body:**
+
 ```json
 {
   "carId": "car_id_here",
@@ -156,6 +164,7 @@ image: [file]
 ```
 
 **Update Status Body:**
+
 ```json
 {
   "status": "confirmed" // pending, confirmed, cancelled, completed
@@ -164,12 +173,13 @@ image: [file]
 
 ### Dashboard (`/api/dashboard`)
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| GET | `/api/dashboard/stats` | Get dashboard statistics | Yes | Owner |
-| GET | `/api/dashboard/revenue` | Get revenue analytics | Yes | Owner |
+| Method | Endpoint                 | Description              | Auth Required | Role  |
+| ------ | ------------------------ | ------------------------ | ------------- | ----- |
+| GET    | `/api/dashboard/stats`   | Get dashboard statistics | Yes           | Owner |
+| GET    | `/api/dashboard/revenue` | Get revenue analytics    | Yes           | Owner |
 
 **Dashboard Stats Response:**
+
 ```json
 {
   "success": true,
@@ -194,6 +204,7 @@ The API uses JWT (JSON Web Tokens) for authentication.
 
 1. Register or login to get a token
 2. Include the token in request headers:
+
 ```
 Authorization: Bearer <your_token_here>
 ```
@@ -231,6 +242,7 @@ server/
 ## 🗄️ Database Schema
 
 ### User Collection
+
 ```javascript
 {
   name: String,
@@ -243,6 +255,7 @@ server/
 ```
 
 ### Car Collection
+
 ```javascript
 {
   owner: ObjectId (ref: User),
@@ -263,6 +276,7 @@ server/
 ```
 
 ### Booking Collection
+
 ```javascript
 {
   car: ObjectId (ref: Car),
@@ -288,6 +302,7 @@ server/
 ### Using Postman or Thunder Client:
 
 1. **Register a User:**
+
    - POST `http://localhost:5000/api/auth/register`
    - Body (JSON):
      ```json
@@ -300,6 +315,7 @@ server/
      ```
 
 2. **Login:**
+
    - POST `http://localhost:5000/api/auth/login`
    - Body (JSON):
      ```json
@@ -311,6 +327,7 @@ server/
    - Copy the token from response
 
 3. **Add a Car:**
+
    - POST `http://localhost:5000/api/cars`
    - Headers: `Authorization: Bearer <token>`
    - Body (form-data):
@@ -332,21 +349,27 @@ server/
 ## 🔧 Troubleshooting
 
 ### MongoDB Connection Error:
+
 ```
 Error: connect ECONNREFUSED 127.0.0.1:27017
 ```
+
 **Solution:** Make sure MongoDB is running. Start it with:
+
 ```powershell
 net start MongoDB
 ```
 
 ### Port Already in Use:
+
 ```
 Error: listen EADDRINUSE: address already in use :::5000
 ```
+
 **Solution:** Change the PORT in `.env` file or kill the process using port 5000.
 
 ### Upload Folder Error:
+
 **Solution:** Make sure the `uploads` folder exists in the server directory.
 
 ## 📝 Important Notes
@@ -355,7 +378,7 @@ Error: listen EADDRINUSE: address already in use :::5000
 2. **CORS:** Currently configured for `localhost:5173` and `localhost:3000`
 3. **JWT Expiry:** Tokens expire after 7 days
 4. **Password Hashing:** All passwords are hashed using bcrypt
-5. **Booking Validation:** 
+5. **Booking Validation:**
    - Cannot book past dates
    - Cannot book conflicting dates
    - Return date must be after pickup date

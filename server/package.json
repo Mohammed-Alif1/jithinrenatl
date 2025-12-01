@@ -9,7 +9,13 @@
     "dev": "nodemon server.js",
     "seed": "node seed.js"
   },
-  "keywords": ["car", "rental", "booking", "mongodb", "express"],
+  "keywords": [
+    "car",
+    "rental",
+    "booking",
+    "mongodb",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

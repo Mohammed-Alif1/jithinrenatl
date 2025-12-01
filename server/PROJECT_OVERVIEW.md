@@ -9,6 +9,7 @@ This is a **production-ready RESTful API backend** for a car rental platform bui
 ## ✨ Features
 
 ### 🔐 Authentication & Authorization
+
 - JWT-based authentication with secure token management
 - Role-based access control (User vs Owner)
 - Password hashing with bcrypt
@@ -16,10 +17,11 @@ This is a **production-ready RESTful API backend** for a car rental platform bui
 - Token expiration (7 days)
 
 ### 🚙 Car Management
+
 - **CRUD Operations**: Create, Read, Update, Delete cars
 - **Image Upload**: Multer integration for car images (5MB limit)
 - **Availability Toggle**: Mark cars as available/unavailable
-- **Search & Filter**: 
+- **Search & Filter**:
   - By location (New York, Los Angeles, Houston, Chicago)
   - By category (Sedan, SUV, Hatchback, Luxury)
   - By price range
@@ -27,6 +29,7 @@ This is a **production-ready RESTful API backend** for a car rental platform bui
 - **Owner-specific**: Each owner manages only their cars
 
 ### 📅 Booking System
+
 - **Date Validation**: Prevent past dates and invalid date ranges
 - **Conflict Detection**: Automatic check for booking conflicts
 - **Price Calculation**: Automatic calculation based on rental days
@@ -35,6 +38,7 @@ This is a **production-ready RESTful API backend** for a car rental platform bui
 - **Booking Cancellation**: Users can cancel their bookings
 
 ### 📊 Owner Dashboard
+
 - **Statistics**:
   - Total cars listed
   - Total bookings received
@@ -47,6 +51,7 @@ This is a **production-ready RESTful API backend** for a car rental platform bui
   - Booking count per period
 
 ### 🖼️ File Management
+
 - Image upload with validation
 - Automatic file naming with timestamps
 - File size limits and type restrictions
@@ -98,18 +103,18 @@ server/
 
 ## 🛠️ Technologies Used
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Node.js | Latest | JavaScript runtime |
-| Express.js | ^4.18.2 | Web framework |
-| MongoDB | Latest | NoSQL database |
-| Mongoose | ^8.0.3 | MongoDB ODM |
-| JWT | ^9.0.2 | Authentication tokens |
-| Bcrypt.js | ^2.4.3 | Password hashing |
-| Multer | ^1.4.5 | File uploads |
-| CORS | ^2.8.5 | Cross-origin requests |
-| Dotenv | ^16.3.1 | Environment variables |
-| Validator | ^13.11.0 | Input validation |
+| Technology | Version  | Purpose               |
+| ---------- | -------- | --------------------- |
+| Node.js    | Latest   | JavaScript runtime    |
+| Express.js | ^4.18.2  | Web framework         |
+| MongoDB    | Latest   | NoSQL database        |
+| Mongoose   | ^8.0.3   | MongoDB ODM           |
+| JWT        | ^9.0.2   | Authentication tokens |
+| Bcrypt.js  | ^2.4.3   | Password hashing      |
+| Multer     | ^1.4.5   | File uploads          |
+| CORS       | ^2.8.5   | Cross-origin requests |
+| Dotenv     | ^16.3.1  | Environment variables |
+| Validator  | ^13.11.0 | Input validation      |
 
 ---
 
@@ -117,48 +122,49 @@ server/
 
 ### Authentication (`/api/auth`)
 
-| Endpoint | Method | Auth | Description |
-|----------|--------|------|-------------|
-| `/register` | POST | No | Register new user/owner |
-| `/login` | POST | No | Login and get JWT token |
-| `/profile` | GET | Yes | Get current user profile |
+| Endpoint    | Method | Auth | Description              |
+| ----------- | ------ | ---- | ------------------------ |
+| `/register` | POST   | No   | Register new user/owner  |
+| `/login`    | POST   | No   | Login and get JWT token  |
+| `/profile`  | GET    | Yes  | Get current user profile |
 
 ### Cars (`/api/cars`)
 
-| Endpoint | Method | Auth | Role | Description |
-|----------|--------|------|------|-------------|
-| `/` | GET | No | - | Get all available cars (with filters) |
-| `/:id` | GET | No | - | Get single car details |
-| `/` | POST | Yes | Owner | Add new car (with image) |
-| `/owner/my-cars` | GET | Yes | Owner | Get owner's cars |
-| `/:id` | PUT | Yes | Owner | Update car details |
-| `/:id/toggle` | PATCH | Yes | Owner | Toggle availability |
-| `/:id` | DELETE | Yes | Owner | Delete car |
+| Endpoint         | Method | Auth | Role  | Description                           |
+| ---------------- | ------ | ---- | ----- | ------------------------------------- |
+| `/`              | GET    | No   | -     | Get all available cars (with filters) |
+| `/:id`           | GET    | No   | -     | Get single car details                |
+| `/`              | POST   | Yes  | Owner | Add new car (with image)              |
+| `/owner/my-cars` | GET    | Yes  | Owner | Get owner's cars                      |
+| `/:id`           | PUT    | Yes  | Owner | Update car details                    |
+| `/:id/toggle`    | PATCH  | Yes  | Owner | Toggle availability                   |
+| `/:id`           | DELETE | Yes  | Owner | Delete car                            |
 
 ### Bookings (`/api/bookings`)
 
-| Endpoint | Method | Auth | Role | Description |
-|----------|--------|------|------|-------------|
-| `/` | POST | Yes | User | Create new booking |
-| `/my-bookings` | GET | Yes | User | Get user's bookings |
-| `/owner/bookings` | GET | Yes | Owner | Get owner's bookings |
-| `/:id` | GET | Yes | Both | Get booking details |
-| `/:id/status` | PATCH | Yes | Owner | Update booking status |
-| `/:id/cancel` | PATCH | Yes | User | Cancel booking |
-| `/:id` | DELETE | Yes | Owner | Delete booking |
+| Endpoint          | Method | Auth | Role  | Description           |
+| ----------------- | ------ | ---- | ----- | --------------------- |
+| `/`               | POST   | Yes  | User  | Create new booking    |
+| `/my-bookings`    | GET    | Yes  | User  | Get user's bookings   |
+| `/owner/bookings` | GET    | Yes  | Owner | Get owner's bookings  |
+| `/:id`            | GET    | Yes  | Both  | Get booking details   |
+| `/:id/status`     | PATCH  | Yes  | Owner | Update booking status |
+| `/:id/cancel`     | PATCH  | Yes  | User  | Cancel booking        |
+| `/:id`            | DELETE | Yes  | Owner | Delete booking        |
 
 ### Dashboard (`/api/dashboard`)
 
-| Endpoint | Method | Auth | Role | Description |
-|----------|--------|------|------|-------------|
-| `/stats` | GET | Yes | Owner | Get dashboard statistics |
-| `/revenue` | GET | Yes | Owner | Get revenue analytics |
+| Endpoint   | Method | Auth | Role  | Description              |
+| ---------- | ------ | ---- | ----- | ------------------------ |
+| `/stats`   | GET    | Yes  | Owner | Get dashboard statistics |
+| `/revenue` | GET    | Yes  | Owner | Get revenue analytics    |
 
 ---
 
 ## 🗄️ Database Models
 
 ### User Model
+
 ```javascript
 {
   name: String (required),
@@ -172,6 +178,7 @@ server/
 ```
 
 ### Car Model
+
 ```javascript
 {
   owner: ObjectId (ref: User, required),
@@ -193,6 +200,7 @@ server/
 ```
 
 ### Booking Model
+
 ```javascript
 {
   car: ObjectId (ref: Car, required),
@@ -230,17 +238,20 @@ npm run seed
 ## 🔒 Security Features
 
 1. **Password Security**
+
    - Passwords hashed with bcrypt (salt rounds: 10)
    - Never stored in plain text
    - Password strength validation (min 6 characters)
 
 2. **JWT Security**
+
    - Secure token generation
    - Token expiration (7 days)
    - Protected routes with middleware
    - Token verification on each request
 
 3. **Input Validation**
+
    - Email format validation
    - File type validation (images only)
    - File size limits (5MB)
@@ -258,20 +269,25 @@ npm run seed
 ## 🎯 Key Features Explained
 
 ### Booking Conflict Prevention
+
 The system automatically checks for date conflicts:
+
 ```javascript
 // Prevents double-booking on overlapping dates
 const conflictingBooking = await Booking.findOne({
-    car: carId,
-    status: { $in: ['pending', 'confirmed'] },
-    $or: [{
-        pickupDate: { $lte: returnDate },
-        returnDate: { $gte: pickupDate }
-    }]
+  car: carId,
+  status: { $in: ["pending", "confirmed"] },
+  $or: [
+    {
+      pickupDate: { $lte: returnDate },
+      returnDate: { $gte: pickupDate },
+    },
+  ],
 });
 ```
 
 ### Automatic Price Calculation
+
 ```javascript
 // Calculates total price based on rental days
 const days = Math.ceil((returnDate - pickupDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -279,6 +295,7 @@ const totalPrice = days * car.pricePerDay;
 ```
 
 ### Image Upload Processing
+
 ```javascript
 // Multer configuration with validation
 - File size limit: 5MB
@@ -292,10 +309,13 @@ const totalPrice = days * car.pricePerDay;
 ## 🧪 Testing the API
 
 ### 1. Using the Seed Script
+
 ```bash
 npm run seed
 ```
+
 This creates:
+
 - 2 Owners (owner1@test.com, owner2@test.com)
 - 2 Users (user1@test.com, user2@test.com)
 - 6 Sample cars
@@ -303,11 +323,13 @@ This creates:
 - All passwords: `password123`
 
 ### 2. Using API_COLLECTION.http
+
 - Install "REST Client" or "Thunder Client" VS Code extension
 - Open `API_COLLECTION.http`
 - Click "Send Request" above each endpoint
 
 ### 3. Using MongoDB Compass
+
 - Connect to: `mongodb://localhost:27017`
 - Database: `car-rental-db`
 - View collections: users, cars, bookings
@@ -317,6 +339,7 @@ This creates:
 ## 📊 Sample Response Examples
 
 ### Login Response
+
 ```json
 {
   "success": true,
@@ -332,6 +355,7 @@ This creates:
 ```
 
 ### Dashboard Stats Response
+
 ```json
 {
   "success": true,
@@ -353,6 +377,7 @@ This creates:
 ## ⚠️ Error Handling
 
 All errors follow a consistent format:
+
 ```json
 {
   "success": false,
@@ -361,6 +386,7 @@ All errors follow a consistent format:
 ```
 
 Common HTTP Status Codes:
+
 - `200` - Success
 - `201` - Created
 - `400` - Bad Request (validation errors)
