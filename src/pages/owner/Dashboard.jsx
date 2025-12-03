@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { assets, dummyDashboardData } from '../../assets/assets'
+import { assets } from '../../assets/assets'
 import Title from '../../components/owner/Title'
+import { useAppContext } from '../../context/AppContext'
+import { toast } from 'react-toastify';
 
 const Dashboard = () => {
-  const currency = import.meta.env.VITE_CURRENCY
+
+  const { axios, isOwner, currency, navigate } = useAppContext()
 
   const [data, setData] = useState({
     totalCars: 0,
@@ -21,13 +24,32 @@ const Dashboard = () => {
     { title: "Confirmed", value: data.completedBookings, icon: assets.listIconColored },
   ]
 
+  const fetchDashboardData = async () => {
+    try {
+      const res = await axios.get('/api/owner/dashboard-data');
+
+      if (res.data.success) {
+        setData(res.data.getDashboardData);
+      } else {
+        toast.error(res.data.message);
+      }
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch dashboard data");
+    }
+  }
+
   useEffect(() => {
-    setData(dummyDashboardData)
-  }, [])
+    if (isOwner) {
+      fetchDashboardData()
+    } else {
+      navigate('/')
+    }
+  }, [isOwner, navigate])
 
   return (
     <div className='px-4 pt-10 md:px-10 flex-1'>
-      
+
       <Title
         title="Admin Dashboard"
         subTitle="Monitor overall platform performance including total cars, bookings, revenue, and recent activities"
@@ -54,15 +76,15 @@ const Dashboard = () => {
 
       {/* Main Content: Recent + Revenue */}
       <div className='flex flex-wrap items-start gap-6 mb-8 w-full'>
-        
+
         {/* Recent Bookings */}
         <div className='p-4 md:p-6 border border-borderColor rounded-md max-w-lg w-full'>
           <h1 className='text-lg font-medium'>Recent Bookings</h1>
           <p className='text-gray-500'>Latest customer bookings</p>
 
-          {data.recentBookings.map((booking, index) => (
+          {data.recentBookings?.map((booking, index) => (
             <div key={index} className='mt-4 flex items-center justify-between'>
-              
+
               {/* Left */}
               <div className='flex items-center gap-2'>
                 <div className='hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-primary/10'>
@@ -80,7 +102,7 @@ const Dashboard = () => {
               {/* Right */}
               <div className='flex items-center gap-2 font-medium'>
                 <p className='text-sm text-gray-500'>
-                  {currency}{booking.price}
+                  {currency}{booking.totalAmount}
                 </p>
 
                 <p className='px-3 py-0.5 border border-borderColor rounded-full text-sm'>

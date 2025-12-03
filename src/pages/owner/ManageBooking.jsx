@@ -1,13 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { dummyMyBookingsData, assets } from '../../assets/assets';
+import { assets } from '../../assets/assets';
 import Title from '../../components/owner/Title';
+import { useAppContext } from '../../context/AppContext';
+import { toast } from 'react-toastify';
 
 const ManageBookings = () => {
-    const currency = import.meta.env.VITE_CURRENCY;
+    const { currency, axios } = useAppContext();
     const [bookings, setBookings] = useState([]);
 
     const fetchOwnerBookings = async () => {
-        setBookings(dummyMyBookingsData);
+        try {
+            const { data } = await axios.get('/api/bookings/owner-bookings');
+            console.log("Owner Bookings Data:", data);
+            if (data.success) {
+                setBookings(data.bookings);
+                console.log("Owner Bookings Set:", data.bookings);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error?.response?.data?.message || "Failed to fetch bookings");
+        }
+    };
+
+    const changeBookingStatus = async (id, newStatus) => {
+        console.log("Changing status for booking:", id, "to:", newStatus);
+        try {
+            const { data } = await axios.put(`/api/bookings/change-status/${id}`, { status: newStatus });
+            console.log("Status change response:", data);
+            if (data.success) {
+                toast.success(data.message);
+                fetchOwnerBookings();
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.log("Status change error:", error);
+            toast.error(error?.response?.data?.message || "Failed to update status");
+        }
     };
 
     useEffect(() => {
@@ -34,7 +65,7 @@ const ManageBookings = () => {
                     </thead>
                     <tbody>
                         {bookings.map((booking, index) => (
-                            <tr key={index} className='border-t border-borderColor'>
+                            <tr key={booking._id || index} className='border-t border-borderColor'>
                                 {/* Car Info */}
                                 <td className='p-3 flex items-center gap-3'>
                                     <img
@@ -51,22 +82,38 @@ const ManageBookings = () => {
                                 </td>
 
                                 {/* User */}
-                                <td className='p-3 max-md:hidden'>{booking.user}</td>
+                                <td className='p-3 max-md:hidden'>{booking.user?.name || 'Unknown User'}</td>
 
                                 {/* Price */}
                                 <td className='p-3'>
-                                    {currency}{booking.price}
+                                    {currency}{booking.totalAmount}
                                 </td>
 
                                 {/* Status */}
                                 <td className='p-3 max-md:hidden'>
-                                    <span className={`px-3 py-1 rounded-full text-xs ${
-                                        booking.status === 'confirmed' ? 'bg-green-100 text-green-500' :
-                                        booking.status === 'pending' ? 'bg-yellow-100 text-yellow-500' :
-                                        'bg-red-100 text-red-500'
-                                    }`}>
-                                        {booking.status}
-                                    </span>
+                                    {booking.status === 'pending' ? (
+                                        <div className="flex gap-2">
+                                            <button
+                                                className="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 transition"
+                                                onClick={() => changeBookingStatus(booking._id, 'approved')}
+                                            >
+                                                Approve
+                                            </button>
+                                            <button
+                                                className="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 transition"
+                                                onClick={() => changeBookingStatus(booking._id, 'rejected')}
+                                            >
+                                                Reject
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <span className={`px-3 py-1 rounded-full text-xs ${booking.status === 'approved'
+                                            ? 'bg-green-100 text-green-500'
+                                            : 'bg-red-100 text-red-500'
+                                            }`}>
+                                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                        </span>
+                                    )}
                                 </td>
 
                                 {/* Actions */}

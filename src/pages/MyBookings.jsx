@@ -1,40 +1,67 @@
 import React, { useEffect, useState } from 'react'
 import { dummyMyBookingsData, assets } from '../assets/assets'
 import Title from '../components/Title'
+import { useAppContext } from '../context/AppContext'
+import { toast } from 'react-toastify'
+import { motion } from 'motion/react'
 // import Loader from '../components/Loader'
 
 const MyBookings = () => {
+  const { axios, token } = useAppContext()
   const [bookings, setBookings] = useState([])
   const currency = import.meta.env.VITE_CURRENCY
 
   const fetchMyBookings = async () => {
-    // Simulate API call
-    setBookings(dummyMyBookingsData)
+    try {
+      const { data } = await axios.get('/api/bookings/user-bookings')
+      console.log("MyBookings Data:", data);
+      if (data.success) {
+        setBookings(data.bookings)
+        console.log("Bookings State Set:", data.bookings);
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
   }
 
   useEffect(() => {
-    fetchMyBookings()
-  }, [])
+    if (token) {
+      fetchMyBookings()
+    }
+  }, [token])
 
   return (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 2xl:px-48 mt-16 text-sm max-w-7xl mx-auto pb-12">
-      
-      <Title
-        title="My Bookings"
-        subTitle="View and manage all your car bookings"
-        align="left"
-      />
+
+      <motion.div
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <Title
+          title="My Bookings"
+          subTitle="View and manage all your car bookings"
+          align="left"
+        />
+      </motion.div>
 
       <div>
         {bookings.map((booking, index) => (
-          <div
-            key={booking.booking_id || index} // use booking_id if available, otherwise fallback to index
+          <motion.div
+            key={booking._id || index}
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
+            whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
             className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 border border-borderColor rounded-lg mt-5 first:mt-12"
           >
             {/* Car Image + Info */}
             <div className="md:col-span-1">
               <div className="rounded-md overflow-hidden mb-3">
-                <img
+                <motion.img
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
                   src={booking.car.image}
                   alt=""
                   className="w-full h-auto aspect-video object-cover"
@@ -55,13 +82,14 @@ const MyBookings = () => {
                   Booking #{index + 1}
                 </p>
                 <p
-                  className={`px-3 py-1 text-xs rounded-full ${
-                    booking.status === 'confirmed'
+                  className={`px-3 py-1 text-xs rounded-full ${booking.status === 'approved'
                       ? 'bg-green-400/15 text-green-600'
-                      : 'bg-red-400/15 text-red-600'
-                  }`}
+                      : booking.status === 'rejected'
+                        ? 'bg-red-400/15 text-red-600'
+                        : 'bg-yellow-400/15 text-yellow-600'
+                    }`}
                 >
-                  {booking.status}
+                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                 </p>
               </div>
 
@@ -91,12 +119,12 @@ const MyBookings = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-semibold text-primary">
-                  {currency}{booking.price}
+                  {currency}{booking.totalAmount}
                 </h1>
                 <p>Booked on {booking.createdAt.split('T')[0]}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

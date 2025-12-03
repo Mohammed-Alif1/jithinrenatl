@@ -1,15 +1,40 @@
 import React, { useState } from 'react'
-import { dummyUserData, assets, ownerMenus } from '../../assets/assets'
+import { assets, ownerMenus } from '../../assets/assets'
 import { useLocation, NavLink } from 'react-router-dom'
+import { useAppContext } from '../../context/AppContext'
+import { toast } from 'react-hot-toast'
 
 const Sidebar = () => {
-  const user = dummyUserData
+  const { user, axios, fetchUser } = useAppContext()
   const location = useLocation()
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState(null)
+  const [uploading, setUploading] = useState(false)
 
-  const updateImage = () => {
-    user.image = URL.createObjectURL(image)
-    setImage('')
+  const updateImage = async () => {
+    if (!image) return;
+
+    try {
+      setUploading(true);
+      const formData = new FormData()
+      formData.append('image', image)
+      const { data } = await axios.post('/api/user/update-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      if (data.success) {
+        toast.success("Image updated successfully")
+        setImage(null)
+        fetchUser()
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data?.message || "Something went wrong")
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
@@ -22,11 +47,18 @@ const Sidebar = () => {
             src={
               image
                 ? URL.createObjectURL(image)
-                : user.image ||
-                "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=300"
+                : (user?.image
+                  ? (user.image.startsWith('http') ? user.image : import.meta.env.VITE_API_URL + user.image)
+                  : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=300")
             }
             alt="profile"
             className="w-24 h-24 rounded-full object-cover"
+            onError={(e) => {
+              console.error("Image failed to load:", e.target.src);
+              console.log("User image value:", user?.image);
+              console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+              e.target.src = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=300";
+            }}
           />
 
           <input
@@ -34,7 +66,10 @@ const Sidebar = () => {
             id="image"
             accept="image/*"
             hidden
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={(e) => {
+              console.log("File selected:", e.target.files[0]);
+              setImage(e.target.files[0]);
+            }}
           />
 
           {/* Hover Edit Icon */}
@@ -47,15 +82,15 @@ const Sidebar = () => {
       {/* Save Button */}
       {image && (
         <button
-          className='absolute top-0 right-0 flex p-2 gap-1 bg-primary/10 text-primary cursor-pointer'
+          className='flex items-center gap-2 bg-blue-600 text-white px-4 py-1 rounded-full mt-3 text-xs cursor-pointer hover:bg-blue-700 transition-all'
           onClick={updateImage}
         >
-          Save <img src={assets.check_icon} width={13} alt="Save" />
+          Save Image<img src={assets.upload_icon} className="w-4 h-4" />
         </button>
       )}
 
       {/* User Name */}
-      <p className='mt-2 text-base max-md:hidden'>{user?.name}</p>
+      <p className='mt-2 text-base max-md:hidden'>{user?.name || "Owner"}</p>
 
       {/* Navigation Menu */}
       <div className='w-full'>

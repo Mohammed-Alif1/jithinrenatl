@@ -1,17 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { dummyCarData, assets } from '../../assets/assets';
 import Title from '../../components/owner/Title';
+import { useAppContext } from '../../context/AppContext';
+import { assets } from '../../assets/assets';
+import { toast } from 'react-toastify';
 
 const ManageCars = () => {
+    const { isOwner, axios, currency } = useAppContext();
     const [cars, setCars] = useState([]);
 
     const fetchOwnerCars = async () => {
-        setCars(dummyCarData);
+        try {
+            const { data } = await axios.get('/api/owner/get-owner-cars')
+            if (data.success) {
+                setCars(data.cars);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
+    };
+    const toggleCarStatus = async (id) => {
+        try {
+            const { data } = await axios.put(`/api/owner/toggle-car-status/${id}`);
+            if (data.success) {
+                toast.success(data.message);
+                fetchOwnerCars();
+            } else {
+                toast.error(data.message || "Failed to update car status");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(error?.response?.data?.message || error.message || "Something went wrong");
+        }
+    };
+
+    const deleteCar = async (id) => {
+        try {
+            const confirm = window.confirm("Are you sure you want to delete this car?")
+            if (!confirm) return;
+            const { data } = await axios.delete(`/api/owner/delete-car/${id}`)
+            if (data.success) {
+                toast.success(data.message);
+                fetchOwnerCars();
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
     };
 
     useEffect(() => {
-        fetchOwnerCars();
-    }, []);
+        isOwner && fetchOwnerCars();
+    }, [isOwner]);
 
     return (
         <div className='px-4 pt-10 md:px-10 w-full'>
@@ -50,19 +94,21 @@ const ManageCars = () => {
                                 <td className='p-3 max-md:hidden'>{car.category}</td>
                                 <td className='p-3'>${car.pricePerDay}/day</td>
                                 <td className='p-3 max-md:hidden'>
-                                    <span className={`px-3 py-1 rounded-full text-xs ${car.isAvaliable ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
-                                        {car.isAvaliable ? "Available" : "Unavailable"}
+                                    <span className={`px-3 py-1 rounded-full text-xs ${car.isAvailable ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
+                                        {car.isAvailable ? "Available" : "Unavailable"}
                                     </span>
                                 </td>
                                 <td className='flex items-center gap-4 p-3'>
                                     {/* View / Hide icon */}
                                     <img
-                                        src={car.isAvaliable ? assets.eye_close_icon : assets.eye_icon}
+                                        onClick={() => toggleCarStatus(car._id)}
+                                        src={car.isAvailable ? assets.eye_close_icon : assets.eye_icon}
                                         alt="toggle"
                                         className='cursor-pointer h-8 w-8'
                                     />
                                     {/* Delete icon */}
                                     <img
+                                        onClick={() => deleteCar(car._id)}
                                         src={assets.delete_icon}
                                         alt="delete"
                                         className='cursor-pointer h-8 w-8'
